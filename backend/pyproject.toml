@@ -1,0 +1,28 @@
+[project]
+name = "blood-donation-api"
+version = "0.1.0"
+description = "Blood donation management API"
+readme = "README.md"
+authors = [
+    { name = "Aiswarya", email = "76909@thescmsilk.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "bcrypt<4.1",
+    "fastapi[standard]>=0.142.2",
+    "passlib[bcrypt]>=1.7.4",
+    "psycopg2-binary>=2.9.13",
+    "python-decouple>=3.8",
+    "python-jose[cryptography]>=3.5.0",
+    "python-multipart>=0.0.32",
+    "sqlalchemy>=2.1.4",
+    "uvicorn>=0.54.0",
+]
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "app"
+module-root = ""
