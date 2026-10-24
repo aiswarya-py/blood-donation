@@ -1,4 +1,4 @@
-from pydantic import BaseModel,field_validator
+from pydantic import BaseModel, ConfigDict, field_validator
 
 class DonorCreate(BaseModel):
     name:str
@@ -29,6 +29,5 @@ class DonorOut(BaseModel):
     city:str    
     is_available:bool
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 

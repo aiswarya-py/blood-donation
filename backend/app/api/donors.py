@@ -9,11 +9,11 @@ router = APIRouter(prefix="/donors",tags=["Donors"])
 
 @router.post("/",response_model=DonorOut)
 def create(donor:DonorCreate,token:str,db:Session=Depends(get_db)):
-    current_user=get_user_from_token(token)
+    current_user=get_user_from_token(token,db)
     existing=donor_service.get_donor_by_phone(db,donor.phone)
     if existing:
         raise HTTPException(status_code=400,detail="Phone number already registered")
-    return donor_service.create_donor(db,donor,user_id=current_user["id"])
+    return donor_service.create_donor(db,donor,user_id=current_user.id)
 
 @router.get("/",response_model=list[DonorOut])
 def get_all(db:Session=Depends(get_db)):

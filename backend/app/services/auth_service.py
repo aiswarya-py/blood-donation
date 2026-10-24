@@ -1,7 +1,10 @@
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta,timezone
 from passlib.context import CryptContext
 from jose import jwt
 from decouple import config
+from sqlalchemy.orm import Session
+from app.models import User
+from app.schemas.auth import UserCreate
 
 
 
@@ -20,9 +23,19 @@ def hash_password(password:str) -> str:
 def verify_password(plain_password:str,hashed_password:str) -> bool:
     return pwd_context.verify(plain_password,hashed_password)
 
+def get_user_by_email(db:Session,email:str):
+    return db.query(User).filter(User.email == email).first()
+
+def create_user(db:Session,user:UserCreate):
+    new_user =User(name=user.name,email=user.email,hashed_password=hash_password(user.password),)
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
+
 def create_access_token(data:dict) ->str:
     to_encode =data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp":expire})
     return jwt.encode(to_encode,SECRET_KEY,algorithm=ALGORITHM)
 
